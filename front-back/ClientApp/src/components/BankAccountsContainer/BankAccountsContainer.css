@@ -1,0 +1,56 @@
+.bank-accounts-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  transform: translate(5%, 20%);
+  width: 90%;
+  border-radius: 0.5em;
+  box-shadow: 0em 0.2em rgb(170, 170, 170);
+}
+
+.bank-accounts-container > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-bottom: 0.5em;
+}
+
+.bank-accounts-container p {
+  color: rgb(0, 0, 255);
+  padding-left: 1em;
+}
+
+.bank-accounts-container button {
+  border: none;
+  border-radius: 0.25em;
+  box-shadow: 0em 0.2em rgb(170, 170, 170);
+  padding: 1em;
+}
+
+.bank-accounts-container button:active {
+    background-color: rgb(170, 170, 170);
+  }
+
+.bank-accounts-title > p {
+  font-size: 1.2em;
+  padding-left: 0px;
+}
+
+.bank-accounts-container .create-btn {
+  background-color: rgb(0, 55, 207);
+  color: white;
+  box-shadow: 0em 0.2em rgb(0, 41, 155);
+}
+
+.bank-accounts-container .create-btn:active {
+  background-color: rgb(0, 41, 155);
+}
+
+
+.main-page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

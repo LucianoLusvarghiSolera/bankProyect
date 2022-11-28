@@ -264,7 +264,7 @@ namespace test_backend.Database
         }
 
 
-        /*
+        
         [TestMethod]
         public async Task CreateUser()
         {
@@ -274,16 +274,16 @@ namespace test_backend.Database
 
             //Create a client
             Client client = new Client();
-            client.FirstName = "Luciano";
-            client.LastName = "Lusvarghi";
-            client.UserName = "Chunfly";
-            client.Password = "A123456*";
+            client.FirstName = "Emilio";
+            client.LastName = "Vini";
+            client.UserName = "Alpha";
+            client.Password = "8526AAA*";
 
             //Check client initial state
-            Assert.IsTrue(client.FirstName.Equals("Luciano"), "Client FirstName expected: Luciano -- obtained: " + client.FirstName);
-            Assert.IsTrue(client.LastName.Equals("Lusvarghi"), "Client LastName expected: Lusvarghi -- obtained: " + client.LastName);
-            Assert.IsTrue(client.UserName.Equals("Chunfly"), "Client UserName expected: Chunfly -- obtained: " + client.UserName);
-            Assert.IsTrue(client.Password.Equals("A123456*"), "Client Password expected: A123456* -- obtained: " + client.Password);
+            Assert.IsTrue(client.FirstName.Equals("Emilio"), "Client FirstName expected: Luciano -- obtained: " + client.FirstName);
+            Assert.IsTrue(client.LastName.Equals("Vini"), "Client LastName expected: Lusvarghi -- obtained: " + client.LastName);
+            Assert.IsTrue(client.UserName.Equals("Alpha"), "Client UserName expected: Chunfly -- obtained: " + client.UserName);
+            Assert.IsTrue(client.Password.Equals("8526AAA*"), "Client Password expected: A123456* -- obtained: " + client.Password);
 
             Assert.IsTrue(client.Accounts.Count.Equals(0), "Client Accounts count expected: 1 -- obtained: " + client.Accounts.Count.ToString());
 
@@ -293,10 +293,10 @@ namespace test_backend.Database
             Client checkClient = await db_test.FindById(clientId);
 
             //Check client recover state
-            Assert.IsTrue(checkClient.FirstName.Equals("Luciano"), "Client FirstName expected: Luciano -- obtained: " + checkClient.FirstName);
-            Assert.IsTrue(checkClient.LastName.Equals("Lusvarghi"), "Client LastName expected: Lusvarghi -- obtained: " + checkClient.LastName);
-            Assert.IsTrue(checkClient.UserName.Equals("Chunfly"), "Client UserName expected: Chunfly -- obtained: " + checkClient.UserName);
-            Assert.IsTrue(checkClient.Password.Equals("A123456*"), "Client Password expected: A123456* -- obtained: " + checkClient.Password);
+            Assert.IsTrue(checkClient.FirstName.Equals("Emilio"), "Client FirstName expected: Luciano -- obtained: " + checkClient.FirstName);
+            Assert.IsTrue(checkClient.LastName.Equals("Vini"), "Client LastName expected: Lusvarghi -- obtained: " + checkClient.LastName);
+            Assert.IsTrue(checkClient.UserName.Equals("Alpha"), "Client UserName expected: Chunfly -- obtained: " + checkClient.UserName);
+            Assert.IsTrue(checkClient.Password.Equals("8526AAA*"), "Client Password expected: A123456* -- obtained: " + checkClient.Password);
 
             //Create a account
             Account account = new Account();
@@ -306,14 +306,27 @@ namespace test_backend.Database
             //Put account
             int AccountId = await db_test.AddBankAccount(clientId, account);
 
+            account = new Account();
+            account.BankName = "IberCaja";
+            account.Balance = 15500.0;
+
+            //Put account
+            int AccountId2 = await db_test.AddBankAccount(clientId, account);
+
             //Recover client with new account
             checkClient = await db_test.FindById(clientId);
 
             //Check account state
-            Assert.IsTrue(checkClient.Accounts.Count.Equals(1), "Client Accounts count expected: 1 -- obtained: " + checkClient.Accounts.Count.ToString());
+            Assert.IsTrue(checkClient.Accounts.Count.Equals(2), "Client Accounts count expected: 2 -- obtained: " + checkClient.Accounts.Count.ToString());
+
             Assert.IsTrue(checkClient.Accounts[0].BankName.Equals("Santander"), "Client Account Bank expected: Santander -- obtained: " + checkClient.Accounts[0].BankName);
             Assert.IsTrue(checkClient.Accounts[0].Balance.Equals(1500.0), "Client Account Balance expected: 1500.0 -- obtained: " + checkClient.Accounts[0].Balance.ToString());
             Assert.IsTrue(checkClient.Accounts[0].Transactions.Count.Equals(0), "Account transaction count expected: 0 -- obtained: " + checkClient.Accounts[0].Transactions.Count.ToString());
+
+            Assert.IsTrue(checkClient.Accounts[1].BankName.Equals("IberCaja"), "Client Account Bank expected: Santander -- obtained: " + checkClient.Accounts[0].BankName);
+            Assert.IsTrue(checkClient.Accounts[1].Balance.Equals(15500.0), "Client Account Balance expected: 1500.0 -- obtained: " + checkClient.Accounts[0].Balance.ToString());
+            Assert.IsTrue(checkClient.Accounts[1].Transactions.Count.Equals(0), "Account transaction count expected: 0 -- obtained: " + checkClient.Accounts[0].Transactions.Count.ToString());
+
 
             //Create Transaction
             Transaction transaction = new Transaction();
@@ -322,22 +335,49 @@ namespace test_backend.Database
             transaction.Amount = 500.0;
 
             int TransactionId = await db_test.AddTransaction(clientId, AccountId, transaction);
+
+            transaction = new Transaction();
+            transaction.RecipientsName = "Eric";
+            transaction.Concept = "Table Game";
+            transaction.Amount = -570.0;
+
+            int TransactionId2 = await db_test.AddTransaction(clientId, AccountId, transaction);
+
+            transaction = new Transaction();
+            transaction.RecipientsName = "Doc";
+            transaction.Concept = "Doc";
+            transaction.Amount = -50.0;
+
+            int TransactionId3 = await db_test.AddTransaction(clientId, AccountId2, transaction);
+
             //Recover client with new transaction
             checkClient = await db_test.FindById(clientId);
-            Assert.IsTrue(checkClient.Accounts[0].Transactions.Count.Equals(1), "Account transaction count expected: 1 -- obtained: " + checkClient.Accounts[0].Transactions.Count.ToString());
+            Assert.IsTrue(checkClient.Accounts[0].Transactions.Count.Equals(2), "Account transaction count expected: 1 -- obtained: " + checkClient.Accounts[0].Transactions.Count.ToString());
+            Assert.IsTrue(checkClient.Accounts[1].Transactions.Count.Equals(1), "Account transaction count expected: 1 -- obtained: " + checkClient.Accounts[0].Transactions.Count.ToString());
+
 
             Assert.IsTrue(checkClient.Accounts[0].Transactions[0].RecipientsName.Equals("Rangu"), "Transaction RecipientsName expected: Rangu -- obtained: " + checkClient.Accounts[0].Transactions[0].RecipientsName);
             Assert.IsTrue(checkClient.Accounts[0].Transactions[0].Concept.Equals("Funny guy"), "Transaction Concept expected: Funny guy -- obtained: " + checkClient.Accounts[0].Transactions[0].Concept);
             Assert.IsTrue(checkClient.Accounts[0].Transactions[0].Amount.Equals(500.0), "Transaction Amount expected: 500.0 -- obtained: " + checkClient.Accounts[0].Transactions[0].Amount.ToString());
 
+            Assert.IsTrue(checkClient.Accounts[0].Transactions[1].RecipientsName.Equals("Eric"), "Transaction RecipientsName expected: Rangu -- obtained: " + checkClient.Accounts[0].Transactions[0].RecipientsName);
+            Assert.IsTrue(checkClient.Accounts[0].Transactions[1].Concept.Equals("Table Game"), "Transaction Concept expected: Funny guy -- obtained: " + checkClient.Accounts[0].Transactions[0].Concept);
+            Assert.IsTrue(checkClient.Accounts[0].Transactions[1].Amount.Equals(-570.0), "Transaction Amount expected: 500.0 -- obtained: " + checkClient.Accounts[0].Transactions[0].Amount.ToString());
 
-            Assert.IsTrue(checkClient.Accounts[0].Balance.Equals(1500.0 + 500.0), "Transaction Amount expected: 2000.0 -- obtained: " + checkClient.Accounts[0].Balance.ToString());
+            Assert.IsTrue(checkClient.Accounts[1].Transactions[0].RecipientsName.Equals("Doc"), "Transaction RecipientsName expected: Rangu -- obtained: " + checkClient.Accounts[0].Transactions[0].RecipientsName);
+            Assert.IsTrue(checkClient.Accounts[1].Transactions[0].Concept.Equals("Doc"), "Transaction Concept expected: Funny guy -- obtained: " + checkClient.Accounts[0].Transactions[0].Concept);
+            Assert.IsTrue(checkClient.Accounts[1].Transactions[0].Amount.Equals(-50.0), "Transaction Amount expected: 500.0 -- obtained: " + checkClient.Accounts[0].Transactions[0].Amount.ToString());
+
+
+
+            Assert.IsTrue(checkClient.Accounts[0].Balance.Equals(1500.0 + 500.0 - 570.0), "Transaction Amount expected: 2000.0 -- obtained: " + checkClient.Accounts[0].Balance.ToString());
+            Assert.IsTrue(checkClient.Accounts[1].Balance.Equals(15500.0 - 50.0), "Transaction Amount expected: 2000.0 -- obtained: " + checkClient.Accounts[0].Balance.ToString());
 
 
 
         }
 
-        */
+
 
     }
 }
